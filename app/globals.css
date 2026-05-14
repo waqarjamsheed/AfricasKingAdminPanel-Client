@@ -1,0 +1,79 @@
+/* Base fallbacks (Tailwind handles most styles) */
+html, body { margin: 0; padding: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+main { line-height: 1.6; }
+label { display: block; margin: 8px 0; }
+input { width: 100%; max-width: 420px; }
+
+/* Ensure form controls are readable in both themes */
+input, select, textarea {
+  color: #111827; /* gray-900 */
+  background-color: #ffffff;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 0.375rem; /* rounded */
+}
+html.dark input, html.dark select, html.dark textarea {
+  color: #f3f4f6; /* gray-100 */
+  background-color: rgba(17,24,39,0.6); /* gray-900/60 */
+  border-color: rgba(255,255,255,0.1);
+}
+input::placeholder, textarea::placeholder {
+  color: #6b7280; /* gray-500 */
+}
+html.dark input::placeholder, html.dark textarea::placeholder {
+  color: #9ca3af; /* gray-400 */
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(59,130,246,0.6); /* blue-500/60 */
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+}
+
+/* Global red button style (applies across app) */
+/* Ensure button styles win over Tailwind preflight (CDN injects after) */
+/* Default red button, with opt-out classes */
+button:not(.btn-ghost):not(.btn-neutral):not(.btn-plain) {
+  background-color: #ef4444 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 0.375rem;
+  padding: 0.625rem 1rem !important; /* balanced */
+  margin-top: 0.25rem;
+  cursor: pointer;
+  transition: filter .15s ease, transform .05s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  line-height: 1.2;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Neutral/ghost button variant (e.g., theme toggle, hamburger) */
+button.btn-ghost {
+  background-color: rgba(255,255,255,0.6) !important;
+  color: inherit !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  border-radius: 0.5rem;
+  /* padding controlled per-use to align header heights */
+}
+html.dark button.btn-ghost {
+  background-color: rgba(17,24,39,0.6) !important; /* ~gray-900/60 */
+  border-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Plain text button variant for inline actions (e.g., delete links) */
+button.btn-plain {
+  background: transparent !important;
+  color: inherit !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0;
+  display: inline;
+  font: inherit;
+  line-height: inherit;
+  cursor: pointer;
+}
+button:hover { filter: brightness(0.95); }
+button:active { transform: translateY(1px); }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
