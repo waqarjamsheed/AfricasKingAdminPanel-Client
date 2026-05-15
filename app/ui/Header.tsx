@@ -22,6 +22,7 @@ export default function Header() {
   const [allowRegistration, setAllowRegistration] = useState<boolean>(false);
   const auth = getAuth(app);
   const pathname = usePathname();
+  const hideOnPaths = ['/', '/login', '/register', '/forgot'];
   const showMenu = loggedIn === true || (!!pathname && (
     pathname.startsWith('/dashboard') ||
     pathname.startsWith('/subscription') ||
@@ -65,6 +66,8 @@ export default function Header() {
     try { sessionStorage.clear(); } catch {}
     window.location.href = '/login?loggedout=1';
   }
+
+  if (hideOnPaths.includes(pathname)) return null;
 
   return (
     <>

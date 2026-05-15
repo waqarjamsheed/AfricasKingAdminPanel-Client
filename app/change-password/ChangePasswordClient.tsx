@@ -45,32 +45,64 @@ export default function ChangePasswordClient() {
   };
 
   return (
-    <main className="max-w-md mx-auto my-10 p-4">
-      <h2 className="text-2xl font-semibold">Change Password</h2>
-      <form onSubmit={onSubmit} className="mt-4 space-y-4">
-        <label>
-          Current password
-          <br />
-          <input className="mt-1 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 px-3 py-2" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required />
-        </label>
-        <label>
-          New password
-          <br />
-          <input className="mt-1 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 px-3 py-2" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required minLength={6} />
-        </label>
-        <label>
-          Confirm new password
-          <br />
-          <input className="mt-1 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 px-3 py-2" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
-        </label>
-        <div>
-          <button type="submit" disabled={loading}>{loading ? 'Updating…' : 'Update Password'}</button>
-        </div>
-      </form>
-      {success && <p className="text-green-600 mt-3">Password updated successfully.</p>}
-      {error && <p className="text-red-600 mt-3">{error}</p>}
-      <p className="mt-3 text-sm"><Link className="underline" href="/dashboard">Back to dashboard</Link></p>
-    </main>
+    <div className="px-4 pt-5 pb-6">
+      <h1 className="text-lg font-bold mb-4" style={{ color: 'var(--ak-text)' }}>Change Password</h1>
+
+      <div className="rounded-xl p-4 mb-4 border" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)' }}>
+        <form onSubmit={onSubmit}>
+          <div className="mb-5">
+            <label className="block text-xs uppercase tracking-wide mb-2 font-medium" style={{ color: 'var(--ak-muted)' }}>Current password</label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={e => setCurrentPassword(e.target.value)}
+              required
+              className="w-full py-3 text-sm bg-transparent outline-none transition-colors"
+              style={{ borderBottom: '1px solid var(--ak-border)', color: 'var(--ak-text)' }}
+            />
+          </div>
+
+          <div className="mb-5">
+            <label className="block text-xs uppercase tracking-wide mb-2 font-medium" style={{ color: 'var(--ak-muted)' }}>New password</label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={e => setNewPassword(e.target.value)}
+              required
+              minLength={6}
+              className="w-full py-3 text-sm bg-transparent outline-none transition-colors"
+              style={{ borderBottom: '1px solid var(--ak-border)', color: 'var(--ak-text)' }}
+            />
+          </div>
+
+          <div className="mb-5">
+            <label className="block text-xs uppercase tracking-wide mb-2 font-medium" style={{ color: 'var(--ak-muted)' }}>Confirm new password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              required
+              className="w-full py-3 text-sm bg-transparent outline-none transition-colors"
+              style={{ borderBottom: '1px solid var(--ak-border)', color: 'var(--ak-text)' }}
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-xs mb-3">{error}</p>}
+          {success && <p className="text-green-500 text-xs mb-3">Password updated successfully.</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3.5 bg-[#f44335] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+          >
+            {loading ? 'Updating…' : 'Update Password'}
+          </button>
+        </form>
+      </div>
+
+      <p className="text-sm text-center" style={{ color: 'var(--ak-muted)' }}>
+        <Link href="/account" className="text-[#f44335]">Back to Account</Link>
+      </p>
+    </div>
   );
 }
-

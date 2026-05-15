@@ -5,14 +5,50 @@ import { app, db } from '@/lib/firebaseClient';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot, type DocumentData, type DocumentSnapshot } from 'firebase/firestore';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { apiPath } from '@/lib/clientApi';
+
+const actions = [
+  {
+    label: 'Change Password',
+    href: '/change-password',
+    icon: (
+      <>
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </>
+    ),
+  },
+  {
+    label: 'My Subscription',
+    href: '/subscription',
+    icon: (
+      <>
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <path d="M2 10h20" />
+      </>
+    ),
+  },
+  {
+    label: 'Login Details',
+    href: '/credentials',
+    icon: (
+      <>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+      </>
+    ),
+  },
+];
 
 export default function AccountDetailsClient() {
   const auth = getAuth(app);
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userInfo, setUserInfo] = useState<{ uid: string; email: string | null; emailVerified: boolean } | null>(null);
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
-  const [isReseller, setIsReseller] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     let unsubUserDoc: null | (() => void) = null;
@@ -25,18 +61,10 @@ export default function AccountDetailsClient() {
       }
       setUserInfo({ uid: user.uid, email: user.email, emailVerified: !!user.emailVerified });
       setDisplayName(user.displayName || null);
-      user.getIdTokenResult().then(res => {
-        const claims = res.claims as Record<string, unknown>;
-        const role = typeof claims.role === 'string' ? claims.role : undefined;
-        setIsReseller(claims.reseller === true || role === 'reseller');
-      }).catch(() => setIsReseller(false));
-      // Listen to user doc for status/subscriptionId
       const ref = doc(db, 'users', user.uid);
       unsubUserDoc = onSnapshot(ref, (snap: DocumentSnapshot<DocumentData>) => {
-        const data = (snap.data() || {}) as { status?: unknown; subscriptionId?: unknown; displayName?: unknown };
-        const statusVal = typeof data.status === 'string' ? data.status : null;
-        setStatus(statusVal);
-        // Prefer Firestore profile name when available; fallback to auth profile
+        const data = (snap.data() || {}) as { status?: unknown; displayName?: unknown };
+        setStatus(typeof data.status === 'string' ? data.status : null);
         if (typeof data.displayName === 'string' && data.displayName.trim()) {
           setDisplayName(data.displayName);
         }
@@ -46,41 +74,82 @@ export default function AccountDetailsClient() {
     return () => { if (unsubUserDoc) unsubUserDoc(); unsub(); };
   }, [auth]);
 
+  const logout = async () => {
+    setLoggingOut(true);
+    try { await fetch(apiPath('/api/auth/session'), { method: 'DELETE' }); } catch {}
+    try { await auth.signOut(); } catch {}
+    try { localStorage.clear(); } catch {}
+    try { sessionStorage.clear(); } catch {}
+    window.location.href = '/login?loggedout=1';
+  };
+
   if (loading) {
     return (
-      <main className="max-w-3xl mx-auto my-20 p-4 text-center">
-        <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-primary" />
-        <p className="mt-3 text-gray-500">Loading account…</p>
-      </main>
+      <div className="px-4 pt-10 flex flex-col items-center gap-3">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#f44335]" />
+        <p className="text-sm" style={{ color: 'var(--ak-muted)' }}>Loading…</p>
+      </div>
     );
   }
 
   if (!userInfo) {
     return (
-      <main className="max-w-3xl mx-auto my-10 p-4">
-        <p>You are not logged in. <Link href="/login" className="underline">Login</Link></p>
-      </main>
+      <div className="px-4 pt-10 text-sm" style={{ color: 'var(--ak-muted)' }}>
+        Not logged in. <Link href="/login" className="text-[#f44335]">Login</Link>
+      </div>
     );
   }
 
   return (
-    <main className="max-w-3xl mx-auto my-8 p-4">
-      <h2 className="text-2xl font-semibold mb-2">Account Info</h2>
-      <div className="mt-2 rounded-lg border border-black/5 dark:border-white/10 p-4 bg-white dark:bg-gray-900 shadow-soft">
-        <p><strong>Name:</strong> {displayName || '—'}</p>
-        <p><strong>Email:</strong> {userInfo.email || '—'}</p>
-        <p><strong>Email Verified:</strong> {userInfo.emailVerified ? 'Yes' : 'No'}</p>
-        <p><strong>Status:</strong> {status || '—'}</p>
-      </div>
-      <div className="mt-4 flex gap-2 flex-wrap">
-        {!isReseller && (
+    <div className="px-4 pt-5 pb-6">
+      <h1 className="text-lg font-bold mb-4" style={{ color: 'var(--ak-text)' }}>Account</h1>
+
+      {/* Account info card */}
+      <div className="rounded-xl p-4 mb-4 border" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)' }}>
+        <p className="text-xs uppercase tracking-wide mb-0.5" style={{ color: 'var(--ak-muted)' }}>Name</p>
+        <p className="text-sm font-semibold" style={{ color: 'var(--ak-text)' }}>{displayName || '—'}</p>
+        <p className="text-xs mt-2 uppercase tracking-wide mb-0.5" style={{ color: 'var(--ak-muted)' }}>Email</p>
+        <p className="text-sm font-semibold" style={{ color: 'var(--ak-text)' }}>{userInfo.email || '—'}</p>
+        {status && (
           <>
-            <Link href="/subscription" className="underline">View Subscription</Link>
-            <Link href="/credentials" className="underline">View Login Details</Link>
+            <p className="text-xs mt-2 uppercase tracking-wide mb-0.5" style={{ color: 'var(--ak-muted)' }}>Status</p>
+            <p className="text-sm font-semibold" style={{ color: 'var(--ak-text)' }}>{status}</p>
           </>
         )}
-        <Link href="/change-password" className="underline">Change Password</Link>
       </div>
-    </main>
+
+      {/* Action list */}
+      <div className="space-y-2 mb-4">
+        {actions.map((action) => (
+          <Link
+            key={action.label}
+            href={action.href}
+            className="w-full rounded-xl px-4 py-4 flex items-center gap-3 border"
+            style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)', textDecoration: 'none', display: 'flex' }}
+          >
+            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--ak-card2)' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f44335" strokeWidth="2">
+                {action.icon}
+              </svg>
+            </div>
+            <span className="text-sm font-medium flex-1" style={{ color: 'var(--ak-text)' }}>{action.label}</span>
+            <span style={{ color: 'var(--ak-muted)' }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </span>
+          </Link>
+        ))}
+      </div>
+
+      {/* Logout */}
+      <button
+        onClick={logout}
+        disabled={loggingOut}
+        className="w-full py-3.5 bg-[#f44335] text-white rounded-full text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+      >
+        {loggingOut ? 'Logging out…' : 'Logout'}
+      </button>
+    </div>
   );
 }

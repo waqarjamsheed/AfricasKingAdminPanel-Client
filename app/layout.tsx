@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body suppressHydrationWarning style={{ margin: 0, padding: 0, minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--ak-bg)', color: 'var(--ak-text)' }}>
         <Header />
-        <div style={{ flex: 1, paddingBottom: '80px', overflow: 'auto', padding: '20px' }}>
+        <div style={{ flex: 1, overflow: 'auto', paddingBottom: '80px' }}>
           {children}
         </div>
         <BottomNav />

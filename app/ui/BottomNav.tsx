@@ -1,93 +1,119 @@
 "use client";
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app } from '@/lib/firebaseClient';
-import { apiPath } from '@/lib/clientApi';
+
+const navItems = [
+  {
+    href: '/credentials',
+    label: 'Accounts',
+    exact: false,
+    icon: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+      </svg>
+    ),
+  },
+  {
+    href: '/dashboard',
+    label: 'Applications',
+    exact: false,
+    icon: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+    ),
+  },
+  {
+    href: '/subscription',
+    label: 'Payment',
+    exact: false,
+    icon: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <path d="M2 10h20" />
+      </svg>
+    ),
+  },
+  {
+    href: '/change-password',
+    label: 'Security',
+    exact: false,
+    icon: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <rect x="2" y="4" width="20" height="16" rx="2" />
+        <path d="M2 7l10 7 10-7" />
+      </svg>
+    ),
+  },
+  {
+    href: '/faq',
+    label: 'FAQ',
+    exact: false,
+    icon: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+        <circle cx="12" cy="17" r="0.5" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    href: '/account',
+    label: 'Setting',
+    exact: false,
+    icon: () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      </svg>
+    ),
+  },
+];
+
+const hideOnPaths = ['/', '/login', '/register', '/forgot'];
 
 export default function BottomNav() {
   const pathname = usePathname();
-  const router = useRouter();
   const auth = getAuth(app);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
 
-  if (pathname === '/login') return null;
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
+    return () => unsub();
+  }, [auth]);
 
-  const navItems = [
-    { href: '/dashboard', icon: 'fa-solid fa-home', label: 'Dashboard' },
-    { href: '/credentials', icon: 'fa-solid fa-key', label: 'Details' },
-    { href: '/subscription', icon: 'fa-regular fa-credit-card', label: 'Billing' },
-    { href: '/account', icon: 'fa-solid fa-user', label: 'Account' },
-    { href: '/change-password', icon: 'fa-solid fa-lock', label: 'Security' },
-    { action: 'logout', icon: 'fa-solid fa-sign-out-alt', label: 'Logout' },
-  ];
-
-  const isActive = (href: string) => pathname === href || pathname?.startsWith(href + '/');
-
-  const handleLogout = async () => {
-    try {
-      await fetch(apiPath('/api/auth/session'), { method: 'DELETE' });
-      await signOut(auth);
-      if (typeof window !== 'undefined') {
-        try { localStorage.clear(); } catch {}
-        try { sessionStorage.clear(); } catch {}
-      }
-      window.location.href = '/login?loggedout=1';
-    } catch (err) {
-      console.error('Logout failed:', err);
-    }
-  };
+  if (hideOnPaths.includes(pathname)) return null;
+  if (user === undefined) return null;
+  if (!user) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50" style={{ background: 'var(--ak-nav)', borderTop: '1px solid var(--ak-border)', display: 'flex', height: '80px' }}>
-      {navItems.map((item) => {
-        const isItemActive = 'href' in item && item.href ? isActive(item.href) : false;
-        const color = isItemActive ? '#f44335' : 'var(--ak-muted)';
-
-        if ('action' in item && item.action === 'logout') {
-          return (
-            <button
-              key="logout"
-              type="button"
-              onClick={handleLogout}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '100%',
-                height: '100%',
-                flex: 1,
-                fontSize: '10px',
-                fontWeight: 500,
-                color: color,
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'opacity 0.2s'
-              }}
-              title="Logout"
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-            >
-              <i className={`${item.icon} text-lg mb-1`} aria-hidden="true" style={{ marginBottom: '4px', fontSize: '18px' }} />
-              <span>{item.label}</span>
-            </button>
-          );
-        }
-
+    <nav
+      className="fixed bottom-0 left-0 right-0 flex items-center justify-around py-2 z-50 border-t"
+      style={{ background: 'var(--ak-nav)', borderColor: 'var(--ak-border)' }}
+    >
+      {navItems.map((item, i) => {
+        const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+        const color = isActive ? '#f44335' : 'var(--ak-muted)';
         return (
           <Link
-            key={'href' in item && item.href ? item.href : item.label}
-            href={'href' in item && item.href ? item.href : '#'}
-            className="flex flex-col items-center justify-center w-full h-full text-[10px] font-medium transition-colors flex-1"
+            key={`${item.href}-${i}`}
+            href={item.href}
+            className="flex flex-col items-center gap-0.5 px-1 py-1 min-w-0"
             style={{ color }}
           >
-            <i className={`${item.icon} text-lg mb-1`} aria-hidden="true" />
-            <span>{item.label}</span>
+            {item.icon()}
+            <span className="text-[10px] font-medium leading-tight">{item.label}</span>
           </Link>
         );
       })}
-    </div>
+    </nav>
   );
 }
