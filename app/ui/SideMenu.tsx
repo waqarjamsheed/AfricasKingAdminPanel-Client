@@ -10,10 +10,9 @@ export default function SideMenu({ open, onClose, children }: { open: boolean; o
   return createPortal(
     <div className="fixed inset-0 z-[1000]">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <aside className="absolute left-0 top-0 h-full w-72 max-w-[80vw] relative overflow-hidden bg-white dark:bg-gray-900 border-r border-black/5 dark:border-white/10 shadow-soft p-4 animate-[slideIn_.2s_ease]">
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-white via-rose-50 to-white dark:from-gray-900 dark:via-gray-900/90 dark:to-gray-900" aria-hidden />
+      <aside className="absolute left-0 top-0 h-full w-72 max-w-[80vw] relative overflow-hidden shadow-soft p-4 animate-[slideIn_.2s_ease]" style={{ background: 'var(--ak-nav)', borderRight: '1px solid var(--ak-border)' }}>
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2 font-semibold">
+          <div className="flex items-center gap-2 font-semibold" style={{ color: 'var(--ak-text)' }}>
             <img src="/icon.png" alt="AfricasKing" className="h-6 w-6" />
             <span>AfricasKing</span>
           </div>
@@ -25,6 +24,17 @@ export default function SideMenu({ open, onClose, children }: { open: boolean; o
       </aside>
       <style jsx>{`
         @keyframes slideIn { from { transform: translateX(-12px); opacity: .6; } to { transform: translateX(0); opacity: 1; } }
+        nav :global(a),
+        nav :global(button) {
+          color: var(--ak-text);
+          padding: 8px;
+          border-radius: 6px;
+          transition: background-color 0.15s;
+        }
+        nav :global(a:hover),
+        nav :global(button:hover) {
+          background-color: var(--ak-card2);
+        }
       `}</style>
     </div>,
     document.body

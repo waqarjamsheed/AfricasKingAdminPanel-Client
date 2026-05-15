@@ -184,58 +184,54 @@ export default function CredentialsDetailsClient() {
 
   return (
     <>
-    <main className="max-w-6xl mx-auto my-8 p-4">
-      <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6 sm:p-8 shadow-soft">
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_top_left,rgba(239,68,68,.25),transparent_45%),radial-gradient(circle_at_bottom_right,rgba(14,116,144,.25),transparent_45%)]" />
-        <div className="absolute inset-0 pointer-events-none" aria-hidden>
-          <div className="h-full w-full bg-[linear-gradient(0deg,transparent_24%,rgba(255,255,255,.08)_25%,rgba(255,255,255,.08)_26%,transparent_27%),linear-gradient(90deg,transparent_24%,rgba(255,255,255,.08)_25%,rgba(255,255,255,.08)_26%,transparent_27%)] bg-[size:44px_44px] opacity-10" />
-        </div>
+    <main className="max-w-6xl mx-auto my-8 p-4" style={{ background: 'var(--ak-bg)' }}>
+      <section className="relative overflow-hidden rounded-2xl border p-6 sm:p-8 shadow-soft" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)', color: 'var(--ak-text)' }}>
         <div className="relative grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-4">
             <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl" style={{ background: 'var(--ak-card2)', color: '#f44335' }}>
                 <i className="fa-solid fa-key" aria-hidden="true" />
               </div>
               <div>
-                <div className="text-xs uppercase tracking-[0.2em] text-white/60">App login</div>
+                <div className="text-xs uppercase tracking-[0.2em]" style={{ color: 'var(--ak-muted)' }}>App login</div>
                 <h2 className="mt-1 text-xl sm:text-2xl font-semibold">App Login Details</h2>
-                <p className="mt-2 text-sm text-white/70">Use these details to sign in to your AfricasKing apps.</p>
+                <p className="mt-2 text-sm" style={{ color: 'var(--ak-muted)' }}>Use these details to sign in to your AfricasKing apps.</p>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 text-xs">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-white/80">
+              <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card2)', color: 'var(--ak-muted)' }}>
                 <i className="fa-solid fa-user-group" aria-hidden="true" />
                 {accountList.length} {accountList.length === 1 ? 'account' : 'accounts'}
               </div>
             </div>
           </div>
           <div className="grid gap-3">
-        <div className="mt-6 rounded-xl border border-white/15 bg-white/5 p-4 text-sm text-white/70">
-          <div className="text-xs uppercase tracking-wide text-white/60">URL</div>
-          <div className="mt-2 rounded-lg border border-white/30 bg-white/10 px-3 py-2 text-[12px] sm:text-sm font-semibold text-white shadow-sm whitespace-nowrap">
+        <div className="mt-6 rounded-xl border p-4 text-sm" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card2)', color: 'var(--ak-muted)' }}>
+          <div className="text-xs uppercase tracking-wide">URL</div>
+          <div className="mt-2 rounded-lg border px-3 py-2 text-[12px] sm:text-sm font-semibold shadow-sm whitespace-nowrap" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card)', color: 'var(--ak-text)' }}>
             {primaryStreamUrl || '—'}
           </div>
-          <div className="mt-1 text-xs text-white/60">Enter this URL in the AfricasKing app</div>
+          <div className="mt-1 text-xs">Enter this URL in the AfricasKing app</div>
         </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white/70">
+            <div className="rounded-xl border p-4 text-sm" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card2)', color: 'var(--ak-muted)' }}>
               Copy your details below and open the app on your device.
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mt-6 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-gray-900 p-5 sm:p-6 shadow-soft">
+      <section className="mt-6 rounded-2xl border p-5 sm:p-6 shadow-soft" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card)' }}>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-lg font-semibold">Accounts</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">Your login details for each account.</p>
+            <h3 className="text-lg font-semibold" style={{ color: 'var(--ak-text)' }}>Accounts</h3>
+            <p className="text-sm" style={{ color: 'var(--ak-muted)' }}>Your login details for each account.</p>
           </div>
-          <Link href="/subscription" className="text-sm font-medium text-primary hover:underline">View subscription</Link>
+          <Link href="/subscription" className="text-sm font-medium hover:underline" style={{ color: '#f44335' }}>View subscription</Link>
         </div>
         {accountsLoading ? (
-          <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">Loading accounts…</p>
+          <p className="mt-4 text-sm" style={{ color: 'var(--ak-muted)' }}>Loading accounts…</p>
         ) : accountList.length > 0 ? (
-          <div className="mt-4 grid gap-3 lg:grid-cols-2">
+          <div className="mt-4 grid gap-3">
             {accountList.map((acct) => {
               const keyBase = acct.id;
               const u = acct?.username || '';
@@ -244,74 +240,109 @@ export default function CredentialsDetailsClient() {
                 ? streamTemplate.replace('{username}', encodeURIComponent(u)).replace('{password}', encodeURIComponent(p))
                 : '';
               const statusInfo = getProvisionStatus(acct);
+              const [showPass, setShowPass] = useState(false);
               return (
-                <div key={acct.id} className="rounded-xl border border-black/5 dark:border-white/10 p-4 bg-white/80 dark:bg-gray-900 shadow-sm">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-xs uppercase tracking-wide text-gray-500">{acct.accountType} account</div>
-                      <div className="mt-1 text-sm font-semibold">{acct.username || '—'}</div>
-                    </div>
+                <div key={acct.id} className="rounded-xl p-4 mb-3 border shadow-sm" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)' }}>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-semibold" style={{ color: 'var(--ak-muted)' }}>Account Login</p>
                     <span className={`text-xs px-2 py-1 rounded-full ${getProvisionStatusBadgeClass(statusInfo.displayStatus)}`}>
                       {getProvisionStatusLabel(statusInfo.displayStatus)}
                     </span>
                   </div>
-                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                  <div className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid var(--ak-border)' }}>
                     <div>
-                      <div className="text-xs text-gray-500">Username</div>
-                      <div className="mt-1 relative rounded border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-gray-800 p-2 pr-9 font-medium">
-                        {acct?.username || '—'}
-                        <button
-                          aria-label="Copy Username"
-                          title={copiedKey === `${keyBase}:username` ? 'Copied!' : 'Copy Username'}
-                          className="absolute top-1.5 right-1.5 inline-flex h-6 w-6 items-center justify-center rounded bg-transparent text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 focus:outline-none focus:ring-0"
-                          onClick={async () => {
-                            const val = acct?.username || '';
-                            if (!val) return;
-                            const ok = await copyToClipboard(val);
-                            if (ok) { setCopiedKey(`${keyBase}:username`); showToast('Username copied'); setTimeout(() => setCopiedKey(null), 1200); }
-                          }}
-                        >
-                          <i className={copiedKey === `${keyBase}:username` ? 'fa-solid fa-check text-green-600' : 'fa-regular fa-copy'} aria-hidden="true"></i>
-                        </button>
-                      </div>
+                      <p className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--ak-muted)' }}>Username</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--ak-text)' }}>{acct.username || '—'}</p>
                     </div>
+                    <button
+                      aria-label="Copy Username"
+                      onClick={async () => {
+                        const val = acct?.username || '';
+                        if (!val) return;
+                        const ok = await copyToClipboard(val);
+                        if (ok) { setCopiedKey(`${keyBase}:username`); showToast('Username copied'); setTimeout(() => setCopiedKey(null), 1200); }
+                      }}
+                      style={{ color: 'var(--ak-muted)' }}
+                      className="ml-2 shrink-0"
+                      title={copiedKey === `${keyBase}:username` ? 'Copied!' : 'Copy Username'}
+                    >
+                      {copiedKey === `${keyBase}:username` ? (
+                        <span className="text-[10px] text-green-400">Copied!</span>
+                      ) : (
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid var(--ak-border)' }}>
                     <div>
-                      <div className="text-xs text-gray-500">Password</div>
-                      <div className="mt-1 relative rounded border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-gray-800 p-2 pr-9 font-medium">
-                        {acct?.password || '—'}
-                        <button
-                          aria-label="Copy Password"
-                          title={copiedKey === `${keyBase}:password` ? 'Copied!' : 'Copy Password'}
-                          className="absolute top-1.5 right-1.5 inline-flex h-6 w-6 items-center justify-center rounded bg-transparent text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 focus:outline-none focus:ring-0"
-                          onClick={async () => {
-                            const val = acct?.password || '';
-                            if (!val) return;
-                            const ok = await copyToClipboard(val);
-                            if (ok) { setCopiedKey(`${keyBase}:password`); showToast('Password copied'); setTimeout(() => setCopiedKey(null), 1200); }
-                          }}
-                        >
-                          <i className={copiedKey === `${keyBase}:password` ? 'fa-solid fa-check text-green-600' : 'fa-regular fa-copy'} aria-hidden="true"></i>
-                        </button>
-                      </div>
+                      <p className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--ak-muted)' }}>Password</p>
+                      <p className="text-sm font-medium" style={{ color: 'var(--ak-text)' }}>
+                        {showPass ? acct.password : '•'.repeat(acct.password?.length || 8)}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 ml-2 shrink-0">
+                      <button onClick={() => setShowPass(!showPass)} style={{ color: 'var(--ak-muted)' }} title={showPass ? 'Hide' : 'Show'}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          {showPass ? (
+                            <><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" /><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" /><line x1="1" y1="1" x2="23" y2="23" /></>
+                          ) : (
+                            <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>
+                          )}
+                        </svg>
+                      </button>
+                      <button
+                        aria-label="Copy Password"
+                        onClick={async () => {
+                          const val = acct?.password || '';
+                          if (!val) return;
+                          const ok = await copyToClipboard(val);
+                          if (ok) { setCopiedKey(`${keyBase}:password`); showToast('Password copied'); setTimeout(() => setCopiedKey(null), 1200); }
+                        }}
+                        style={{ color: 'var(--ak-muted)' }}
+                        title={copiedKey === `${keyBase}:password` ? 'Copied!' : 'Copy Password'}
+                      >
+                        {copiedKey === `${keyBase}:password` ? (
+                          <span className="text-[10px] text-green-400">Copied!</span>
+                        ) : (
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                          </svg>
+                        )}
+                      </button>
                     </div>
                   </div>
+
                   {streamUrl ? (
-                    <div className="mt-3">
-                      <div className="text-xs text-gray-500">URL</div>
-                      <div className="mt-1 relative select-all break-all rounded border border-black/10 dark:border-white/10 bg-gray-50 dark:bg-gray-800 p-2 pr-9 text-[13px]">
-                        {streamUrl}
-                        <button
-                          aria-label="Copy URL"
-                          title={copiedKey === `${keyBase}:url` ? 'Copied!' : 'Copy URL'}
-                          className="absolute top-1.5 right-1.5 inline-flex h-6 w-6 items-center justify-center rounded bg-transparent text-gray-600 dark:text-gray-300 hover:bg-black/5 dark:hover:bg-white/10 focus:outline-none focus:ring-0"
-                          onClick={async () => {
-                            const ok = await copyToClipboard(streamUrl);
-                            if (ok) { setCopiedKey(`${keyBase}:url`); showToast('URL copied'); setTimeout(() => setCopiedKey(null), 1200); }
-                          }}
-                        >
-                          <i className={copiedKey === `${keyBase}:url` ? 'fa-solid fa-check text-green-600' : 'fa-regular fa-copy'} aria-hidden="true"></i>
-                        </button>
+                    <div className="flex items-center justify-between py-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--ak-muted)' }}>URL</p>
+                        <p className="text-xs font-medium truncate" style={{ color: 'var(--ak-text)' }}>{streamUrl}</p>
                       </div>
+                      <button
+                        aria-label="Copy URL"
+                        onClick={async () => {
+                          const ok = await copyToClipboard(streamUrl);
+                          if (ok) { setCopiedKey(`${keyBase}:url`); showToast('URL copied'); setTimeout(() => setCopiedKey(null), 1200); }
+                        }}
+                        style={{ color: 'var(--ak-muted)' }}
+                        className="ml-2 shrink-0"
+                        title={copiedKey === `${keyBase}:url` ? 'Copied!' : 'Copy URL'}
+                      >
+                        {copiedKey === `${keyBase}:url` ? (
+                          <span className="text-[10px] text-green-400">Copied!</span>
+                        ) : (
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                          </svg>
+                        )}
+                      </button>
                     </div>
                   ) : null}
                 </div>
@@ -319,45 +350,46 @@ export default function CredentialsDetailsClient() {
             })}
           </div>
         ) : (
-          <div className="mt-4 rounded-xl border border-dashed border-black/10 dark:border-white/10 bg-gray-50 dark:bg-gray-900/40 p-6 text-sm text-gray-600 dark:text-gray-400">
+          <div className="mt-4 rounded-xl border border-dashed p-6 text-sm" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card2)', color: 'var(--ak-muted)' }}>
             No active account yet. Subscribe to activate your first account.
             <div className="mt-3">
-              <Link href="/subscribe" className="inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white">Subscribe</Link>
+              <Link href="/subscribe" className="inline-flex items-center rounded-lg px-4 py-2 text-sm font-semibold text-white" style={{ background: '#f44335' }}>Subscribe</Link>
             </div>
           </div>
         )}
       </section>
 
-      <section className="mt-6 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-gray-900 p-5 sm:p-6 shadow-soft">
+      <section className="mt-6 rounded-2xl border p-5 sm:p-6 shadow-soft" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card)' }}>
         <div>
-          <h3 className="text-lg font-semibold">Apps & downloads</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Choose your device to start streaming.</p>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--ak-text)' }}>Apps & downloads</h3>
+          <p className="text-sm" style={{ color: 'var(--ak-muted)' }}>Choose your device to start streaming.</p>
         </div>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">
           <button
             type="button"
             onClick={() => setFirestickOpen(true)}
-            className="group rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-gray-900 p-4 hover:-translate-y-0.5 hover:shadow-sm transition text-left btn-neutral"
+            className="group rounded-xl border p-4 hover:-translate-y-0.5 hover:shadow-sm transition text-left btn-neutral"
+            style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card2)' }}
           >
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-black/5 text-gray-700 dark:bg-white/10 dark:text-gray-100">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ background: 'var(--ak-border)', color: '#f44335' }}>
                 <i className="fa-solid fa-fire" aria-hidden="true" />
               </span>
               <div>
-                <div className="font-semibold text-gray-900 dark:text-gray-100">Firestick</div>
-                <div className="text-xs text-gray-500">View install steps</div>
+                <div className="font-semibold" style={{ color: 'var(--ak-text)' }}>Firestick</div>
+                <div className="text-xs" style={{ color: 'var(--ak-muted)' }}>View install steps</div>
               </div>
             </div>
           </button>
           {appLinks.map((link) => (
-            <a key={link.key} href={link.href} target="_blank" rel="noreferrer" className="group rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-gray-900 p-4 hover:-translate-y-0.5 hover:shadow-sm transition">
+            <a key={link.key} href={link.href} target="_blank" rel="noreferrer" className="group rounded-xl border p-4 hover:-translate-y-0.5 hover:shadow-sm transition" style={{ borderColor: 'var(--ak-border)', background: 'var(--ak-card2)' }}>
               <div className="flex items-center gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-black/5 text-gray-700 dark:bg-white/10 dark:text-gray-100">
+                <span className="flex h-10 w-10 items-center justify-center rounded-lg" style={{ background: 'var(--ak-border)', color: '#f44335' }}>
                   <i className={link.icon} aria-hidden="true" />
                 </span>
                 <div>
-                  <div className="font-semibold text-gray-900 dark:text-gray-100">{link.label}</div>
-                  <div className="text-xs text-gray-500">Open download</div>
+                  <div className="font-semibold" style={{ color: 'var(--ak-text)' }}>{link.label}</div>
+                  <div className="text-xs" style={{ color: 'var(--ak-muted)' }}>Open download</div>
                 </div>
               </div>
             </a>

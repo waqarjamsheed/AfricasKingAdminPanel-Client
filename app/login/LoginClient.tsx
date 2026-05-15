@@ -27,7 +27,7 @@ export default function LoginClient({
   const loggedOut = (search?.get('loggedout') || '') === '1';
   const auth = getAuth(app);
   const isProd = process.env.NODE_ENV === 'production';
-  
+
   useEffect(() => {
     if (!sessionExpired && !loggedOut) return;
     fetch(apiPath('/api/auth/session'), { method: 'DELETE' }).catch(() => {});
@@ -128,40 +128,44 @@ export default function LoginClient({
   };
 
   return (
-    <main className="max-w-md mx-auto my-10 p-4">
+    <main className="flex md:flex-row flex-col md:max-h-screen" style={{ background: 'var(--ak-bg)', alignItems: 'center', justifyContent: 'center', padding: 16, gap: 16 }}>
       <LoaderOverlay open={loading} text="Logging in…" />
       <ThemePopup />
-      <h2 className="text-2xl font-semibold">Login</h2>
-      {sessionExpired && (
-        <p className="text-gray-500 mb-3">Your session expired. Please login again.</p>
-      )}
-      {loggedOut && (
-        <p className="text-gray-500 mb-3">You have been logged out.</p>
-      )}
-      <form onSubmit={onSubmit} className="mt-4 space-y-4">
-        <label>
-          Email
-          <br />
-          <input className="mt-1 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 px-3 py-2" value={email} onChange={e => setEmail(e.target.value)} type="email" required />
-        </label>
-        <label>
-          Password
-          <br />
-          <input className="mt-1 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-gray-900 px-3 py-2" value={password} onChange={e => setPassword(e.target.value)} type="password" required />
-        </label>
-        <div>
-          <button type="submit" disabled={loading}>{loading ? 'Signing in…' : 'Login'}</button>
-          <div className="mt-2 text-sm">
-            <Link className="underline" href="/forgot">Forgot password?</Link>
+      <div className="hidden md:flex absolute" style={{ bottom: 16, left: 16 }}>
+        <img src="/icon.png" alt="AfricasKing" className='w-full' />
+      </div>
+
+      {/* Form Container */}
+      <div className="flex flex-col items-center w-full h-[40vh] md:h-auto md:ml-auto md:mr-16" style={{ maxWidth: 400, padding: 16 }}>
+        <div style={{ background: 'var(--ak-card)', borderRadius: 12, padding: '16px 14px', width: '100%', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.15), 0 8px 10px -6px rgba(0,0,0,0.1)' }}>
+        <h2 style={{ fontSize: 16, fontWeight: 600, color: 'var(--ak-text)', margin: '0 0 12px' }}>Login</h2>
+        {sessionExpired && (<p style={{ color: 'var(--ak-muted)', marginBottom: 6, fontSize: 11 }}>Your session expired. Please login again.</p>)}
+        {loggedOut && (<p style={{ color: 'var(--ak-muted)', marginBottom: 6, fontSize: 11 }}>You have been logged out.</p>)}
+        <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div>
+            <label style={{ display: 'block', fontSize: 11, color: 'var(--ak-text)', marginBottom: 4, fontWeight: 500 }}>email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} style={{ width: '100%', padding: '6px 0', borderBottom: '1px solid var(--ak-border)', fontSize: 12, color: 'var(--ak-text)', background: 'transparent', outline: 'none' }} onFocus={(e) => (e.currentTarget.style.borderColor = '#f44335')} onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--ak-border)')} required />
           </div>
+          <div>
+            <label style={{ display: 'block', fontSize: 11, color: 'var(--ak-text)', marginBottom: 4, fontWeight: 500 }}>password</label>
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} style={{ width: '100%', padding: '6px 0', borderBottom: '1px solid var(--ak-border)', fontSize: 12, color: 'var(--ak-text)', background: 'transparent', outline: 'none' }} onFocus={(e) => (e.currentTarget.style.borderColor = '#f44335')} onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--ak-border)')} required />
+          </div>
+          <button type="submit" disabled={loading} style={{ width: '100%', marginTop: 10, padding: '8px 0', background: '#f44335', color: 'white', borderRadius: 999, fontSize: 12, fontWeight: 600, border: 'none', cursor: 'pointer', opacity: loading ? 0.6 : 1 }} onMouseEnter={(e) => !loading && (e.currentTarget.style.opacity = '0.9')} onMouseLeave={(e) => !loading && (e.currentTarget.style.opacity = '1')}>
+            {loading ? 'Signing in' : 'Login'}
+          </button>
+          {error && <p style={{ color: '#ef4444', fontSize: 10, margin: '6px 0 0' }}>{error}</p>}
+          <div style={{ marginTop: 8, fontSize: 11, textAlign: 'center' }}>
+            <Link href="/forgot" style={{ color: '#f44335', textDecoration: 'none' }}>Forgot password?</Link>
+          </div>
+        </form>
+        {allowRegistration ? (<p style={{ marginTop: 8, textAlign: 'center', fontSize: 11, color: 'var(--ak-muted)' }}>Don't have an account? <Link href="/register" style={{ color: '#f44335', textDecoration: 'none', fontWeight: 500 }}>Register</Link></p>) : (<p style={{ marginTop: 8, textAlign: 'center', fontSize: 10, color: 'var(--ak-muted)' }}>{REGISTRATION_WAITLIST_MESSAGE}</p>)}
         </div>
-      </form>
-      {error && <p className="text-red-600 mt-3">{error}</p>}
-      {allowRegistration ? (
-        <p className="mt-3">Don’t have an account? <Link className="underline" href="/register">Register</Link></p>
-      ) : (
-        <p className="mt-3 text-sm text-gray-500">{REGISTRATION_WAITLIST_MESSAGE}</p>
-      )}
+      </div>
+
+      {/* Mobile Logo - Below form on mobile, hidden on desktop */}
+      <div className="flex md:hidden flex-col items-center w-full" style={{ textAlign: 'center'}}>
+        <img src="/icon.png" alt="AfricasKing" className='w-full' />
+      </div>
     </main>
   );
 }

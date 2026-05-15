@@ -1,3 +1,25 @@
+/* africasking theme CSS variables */
+:root {
+  --ak-bg: #f4f4f5;
+  --ak-nav: #ffffff;
+  --ak-card: #ffffff;
+  --ak-card2: #f4f4f5;
+  --ak-border: #e4e4e7;
+  --ak-text: #18181b;
+  --ak-muted: #52525b;
+  --ak-dim: #a1a1aa;
+}
+html.dark {
+  --ak-bg: #0f0f0f;
+  --ak-nav: #1c1c1c;
+  --ak-card: #1e1e1e;
+  --ak-card2: #2a2a2a;
+  --ak-border: #2e2e2e;
+  --ak-text: #ffffff;
+  --ak-muted: #a1a1aa;
+  --ak-dim: #71717a;
+}
+
 /* Base fallbacks (Tailwind handles most styles) */
 html, body { margin: 0; padding: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
 main { line-height: 1.6; }

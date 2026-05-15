@@ -67,64 +67,16 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-30 backdrop-blur border-b border-black/5 dark:border-white/5 bg-white/70 dark:bg-gray-950/60">
+    <>
       <NavigationLoader />
       <LoaderOverlay open={loggingOut} text="Logging out…" />
-      <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {showMenu && (
-            <button aria-label="Open menu" onClick={() => setMenuOpen(true)} className="btn-ghost inline-flex items-center justify-center h-11 w-11">
-              <span className="sr-only">Open menu</span>
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            </button>
-          )}
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <img src="/icon.png" alt="AfricasKing" className="h-6 w-6" />
-            <span className="hidden sm:inline">AfricasKing</span>
-          </Link>
-        </div>
-        <nav className="flex items-center gap-2">
-          {loggedIn === null && (
-            <ThemeToggle />
-          )}
-          {loggedIn === false && (
-            <>
-              {pathname === '/' && (
-                <>
-                  {allowRegistration ? (
-                    <Link href="/register" className="hidden sm:inline-flex h-11 items-center rounded-md bg-primary px-4 font-semibold text-white">Create Account</Link>
-                  ) : null}
-                  <Link href="/login" className="inline-flex h-11 items-center rounded-md bg-white/70 px-4 font-semibold text-gray-900 dark:bg-gray-900/60 dark:text-gray-100 border border-black/10 dark:border-white/10">Login</Link>
-                </>
-              )}
-              {allowRegistration && pathname?.startsWith('/login') && (
-                <Link href="/register" className="inline-flex h-11 items-center rounded-md bg-primary px-4 font-semibold text-white">Create Account</Link>
-              )}
-              {pathname?.startsWith('/register') && (
-                <Link href="/login" className="inline-flex h-11 items-center rounded-md bg-white/70 px-4 font-semibold text-gray-900 dark:bg-gray-900/60 dark:text-gray-100 border border-black/10 dark:border-white/10">Login</Link>
-              )}
-              <ThemeToggle />
-            </>
-          )}
-          {loggedIn === true && (
-            <ThemeToggle />
-          )}
-        </nav>
-      </div>
-
-      {/* Side Menu for logged-in users */}
-      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)}>
-        <Link href="/dashboard" onClick={() => { window.dispatchEvent(new Event('ak:navigate-start')); setMenuOpen(false); }} className="px-2 py-2 rounded hover:bg-black/5 dark:hover:bg-white/10">Dashboard</Link>
-        <Link href="/credentials" onClick={() => { window.dispatchEvent(new Event('ak:navigate-start')); setMenuOpen(false); }} className="px-2 py-2 rounded hover:bg-black/5 dark:hover:bg-white/10">Login Details</Link>
-        <Link href="/subscription" onClick={() => { window.dispatchEvent(new Event('ak:navigate-start')); setMenuOpen(false); }} className="px-2 py-2 rounded hover:bg-black/5 dark:hover:bg-white/10">Subscriptions</Link>
-        <Link href="/account" onClick={() => { window.dispatchEvent(new Event('ak:navigate-start')); setMenuOpen(false); }} className="px-2 py-2 rounded hover:bg-black/5 dark:hover:bg-white/10">Account Info</Link>
-        {loggedIn === true && (
-          <Link href="/change-password" onClick={() => { window.dispatchEvent(new Event('ak:navigate-start')); setMenuOpen(false); }} className="px-2 py-2 rounded hover:bg-black/5 dark:hover:bg-white/10">Change Password</Link>
-        )}
-        <button onClick={() => { setMenuOpen(false); setConfirmOpen(true); }} className="mt-2 text-left px-2 py-2 rounded hover:bg-black/5 dark:hover:bg-white/10">Logout</button>
-      </SideMenu>
-
-      {/* Confirm Logout */}
+      <header className="sticky top-0 z-40 flex items-center justify-between px-4 py-3" style={{ background: 'var(--ak-nav)', borderBottom: '1px solid var(--ak-border)' }}>
+        <span className="text-sm font-bold flex items-center gap-2" style={{ color: 'var(--ak-text)' }}>
+          <img src="/icon.png" alt="AfricasKing" className="w-8 h-8" />
+          AfricasKing
+        </span>
+        <ThemeToggle />
+      </header>
       <Modal open={confirmOpen} title="Confirm Logout" onClose={() => setConfirmOpen(false)}>
         <p className="text-sm">Are you sure you want to logout?</p>
         <div className="mt-4 flex justify-end gap-2">
@@ -132,6 +84,6 @@ export default function Header() {
           <button onClick={logout}>Logout</button>
         </div>
       </Modal>
-    </header>
+    </>
   );
 }
