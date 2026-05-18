@@ -7,6 +7,7 @@ import { doc, onSnapshot, type DocumentData, type DocumentSnapshot } from 'fireb
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { apiPath } from '@/lib/clientApi';
+import { ShimmerBlock } from '../ui/Shimmer';
 
 const actions = [
   {
@@ -85,9 +86,27 @@ export default function AccountDetailsClient() {
 
   if (loading) {
     return (
-      <div className="px-4 pt-10 flex flex-col items-center gap-3">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#f44335]" />
-        <p className="text-sm" style={{ color: 'var(--ak-muted)' }}>Loading…</p>
+      <div className="px-4 pt-5 pb-6">
+        <ShimmerBlock className="h-6 w-28 mb-4" />
+        {/* Account info card skeleton */}
+        <div className="rounded-xl p-4 mb-4 border" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)' }}>
+          <ShimmerBlock className="h-3 w-12 mb-2" />
+          <ShimmerBlock className="h-4 w-40 mb-3" />
+          <ShimmerBlock className="h-3 w-10 mb-2" />
+          <ShimmerBlock className="h-4 w-52" />
+        </div>
+        {/* Action rows skeleton */}
+        <div className="space-y-2 mb-4">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="rounded-xl px-4 py-4 flex items-center gap-3 border" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)' }}>
+              <ShimmerBlock className="w-9 h-9 rounded-full shrink-0" />
+              <ShimmerBlock className="h-4 flex-1" />
+              <ShimmerBlock className="h-4 w-4 shrink-0" />
+            </div>
+          ))}
+        </div>
+        {/* Logout button skeleton */}
+        <ShimmerBlock className="h-12 w-full rounded-full" />
       </div>
     );
   }

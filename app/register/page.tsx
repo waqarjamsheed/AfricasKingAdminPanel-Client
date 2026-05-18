@@ -5,5 +5,5 @@ export default async function RegisterPage({ searchParams }: { searchParams?: Pr
   const sp = searchParams ? await searchParams : {};
   const ref = typeof sp.ref === 'string' ? sp.ref : '';
   const normalizedRef = normalizeRegistrationAccessCode(ref);
-  return <RegisterClient initialRef={normalizedRef} registrationAllowed={true} registrationAccessCode={normalizedRef} />;
+  return <RegisterClient initialRef={normalizedRef} registrationAllowed={false} registrationAccessCode={normalizedRef} />;
 }

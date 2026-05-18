@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from 'react';
-import { getAuth, signInWithEmailAndPassword, sendEmailVerification, User } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, sendEmailVerification, onAuthStateChanged, User } from 'firebase/auth';
 import { app } from '@/lib/firebaseClient';
 import { apiPath } from '@/lib/clientApi';
 import Link from 'next/link';
@@ -20,6 +20,7 @@ export default function LoginClient({
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const router = useRouter();
   const search = useSearchParams();
   const sessionExpired = (search?.get('session') || '') === 'expired';
@@ -31,6 +32,19 @@ export default function LoginClient({
     if (!sessionExpired && !loggedOut) return;
     fetch(apiPath('/api/auth/session'), { method: 'DELETE' }).catch(() => {});
   }, [sessionExpired, loggedOut]);
+
+  useEffect(() => {
+    if (sessionExpired || loggedOut) { setAuthChecked(true); return; }
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.replace('/credentials');
+      } else {
+        setAuthChecked(true);
+      }
+    });
+    return () => unsub();
+  }, [auth, router, sessionExpired, loggedOut]);
+
 
   const formatAuthError = (err: any, fallback = 'Login failed') => {
     const code = err?.code || '';
@@ -114,13 +128,29 @@ export default function LoginClient({
           });
         }
       } catch {}
-      navigate('/dashboard');
+      navigate('/credentials');
     } catch (err: any) {
       setError(formatAuthError(err));
     } finally {
       if (!navigated) setLoading(false);
     }
   };
+
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="w-full max-w-xs mx-5">
+          <div className="bg-white/10 rounded-2xl py-8 px-7 space-y-5">
+            <div className="shimmer-block h-4 w-24 rounded" />
+            <div className="shimmer-block h-10 w-full rounded-lg" />
+            <div className="shimmer-block h-4 w-24 rounded" />
+            <div className="shimmer-block h-10 w-full rounded-lg" />
+            <div className="shimmer-block h-12 w-full rounded-full mt-2" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-center justify-start md:justify-around pt-10 pb-10 px-5 bg-black">

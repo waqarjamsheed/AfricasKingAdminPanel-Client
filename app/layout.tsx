@@ -2,6 +2,7 @@ import './globals.css';
 import { ReactNode } from 'react';
 import Header from './ui/Header';
 import BottomNav from './ui/BottomNav';
+import PageTransition from './ui/PageTransition';
 
 export const metadata = {
   title: 'AfricasKing',
@@ -54,7 +55,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body suppressHydrationWarning style={{ margin: 0, padding: 0, minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--ak-bg)', color: 'var(--ak-text)' }}>
         <Header />
         <div style={{ flex: 1, overflow: 'auto', paddingBottom: '80px' }}>
-          {children}
+          <PageTransition>{children}</PageTransition>
         </div>
         <BottomNav />
       </body>

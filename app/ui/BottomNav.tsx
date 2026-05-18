@@ -1,12 +1,18 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { useEffect, useState, ReactElement } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app } from '@/lib/firebaseClient';
 
-const navItems = [
+type NavItem = {
+  href: string;
+  label: string;
+  exact: boolean;
+  icon: () => ReactElement;
+};
+
+const navItems: NavItem[] = [
   {
     href: '/credentials',
     label: 'Accounts',
@@ -43,13 +49,13 @@ const navItems = [
     ),
   },
   {
-    href: '/change-password',
-    label: 'Security',
+    href: '/sports',
+    label: 'Sports',
     exact: false,
     icon: () => (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <rect x="2" y="4" width="20" height="16" rx="2" />
-        <path d="M2 7l10 7 10-7" />
+        <circle cx="12" cy="12" r="10" />
+        <path d="M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M19.07 4.93l-4.24 4.24M9.17 14.83l-4.24 4.24" />
       </svg>
     ),
   },
@@ -82,6 +88,7 @@ const hideOnPaths = ['/', '/login', '/register', '/forgot'];
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const auth = getAuth(app);
   const [user, setUser] = useState<User | null | undefined>(undefined);
 
@@ -96,22 +103,22 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 flex items-center justify-around py-2 z-50 border-t"
+      className="fixed bottom-0 left-0 right-0 flex items-center py-2 z-50 border-t"
       style={{ background: 'var(--ak-nav)', borderColor: 'var(--ak-border)' }}
     >
       {navItems.map((item, i) => {
         const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
         const color = isActive ? '#f44335' : 'var(--ak-muted)';
         return (
-          <Link
+          <button
             key={`${item.href}-${i}`}
-            href={item.href}
-            className="flex flex-col items-center gap-0.5 px-1 py-1 min-w-0"
-            style={{ color }}
+            className="flex-1 flex flex-col items-center gap-0.5 py-1"
+            style={{ color, background: 'none', border: 'none', cursor: 'pointer' }}
+            onClick={() => router.push(item.href)}
           >
             {item.icon()}
             <span className="text-[10px] font-medium leading-tight">{item.label}</span>
-          </Link>
+          </button>
         );
       })}
     </nav>

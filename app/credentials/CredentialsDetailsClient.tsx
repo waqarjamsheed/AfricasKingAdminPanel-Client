@@ -15,6 +15,7 @@ import {
   type QuerySnapshot,
 } from 'firebase/firestore';
 import Link from 'next/link';
+import { ShimmerBlock } from '../ui/Shimmer';
 import { normalizeAccountType, type AccountType } from '@/lib/accountTypes';
 import { toMillisSafe } from '@/lib/datetime';
 import { getProvisionStatus, getProvisionStatusLabel } from '@/lib/provisionStatus';
@@ -209,9 +210,33 @@ export default function CredentialsDetailsClient() {
 
   if (loading) {
     return (
-      <div className="px-4 pt-10 flex flex-col items-center gap-3">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#f44335]" />
-        <p className="text-sm" style={{ color: 'var(--ak-muted)' }}>Loading…</p>
+      <div className="px-4 pt-5 pb-6">
+        {/* Header row skeleton */}
+        <div className="flex items-center justify-between mb-4">
+          <ShimmerBlock className="h-6 w-24" />
+          <ShimmerBlock className="h-7 w-24 rounded-full" />
+        </div>
+        {/* Account card skeletons */}
+        {[0, 1].map((i) => (
+          <div key={i} className="rounded-xl p-4 mb-3 border" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)' }}>
+            <div className="flex items-center justify-between mb-3">
+              <ShimmerBlock className="h-3 w-28" />
+              <ShimmerBlock className="h-5 w-16 rounded-full" />
+            </div>
+            <div className="py-2" style={{ borderBottom: '1px solid var(--ak-border)' }}>
+              <ShimmerBlock className="h-3 w-16 mb-1.5" />
+              <ShimmerBlock className="h-4 w-36" />
+            </div>
+            <div className="py-2" style={{ borderBottom: '1px solid var(--ak-border)' }}>
+              <ShimmerBlock className="h-3 w-16 mb-1.5" />
+              <ShimmerBlock className="h-4 w-28" />
+            </div>
+            <div className="py-2">
+              <ShimmerBlock className="h-3 w-8 mb-1.5" />
+              <ShimmerBlock className="h-3 w-full" />
+            </div>
+          </div>
+        ))}
       </div>
     );
   }
@@ -238,7 +263,18 @@ export default function CredentialsDetailsClient() {
       </div>
 
       {accountsLoading ? (
-        <p className="text-sm" style={{ color: 'var(--ak-muted)' }}>Loading accounts…</p>
+        <div className="space-y-3">
+          {[0, 1].map((i) => (
+            <div key={i} className="rounded-xl p-4 border" style={{ background: 'var(--ak-card)', borderColor: 'var(--ak-border)' }}>
+              <div className="flex items-center justify-between mb-3">
+                <ShimmerBlock className="h-3 w-28" />
+                <ShimmerBlock className="h-5 w-16 rounded-full" />
+              </div>
+              <ShimmerBlock className="h-3 w-36 mb-2" />
+              <ShimmerBlock className="h-3 w-28" />
+            </div>
+          ))}
+        </div>
       ) : accounts.length > 0 ? (
         accounts.map((acct, i) => {
           const u = acct?.username || '';
